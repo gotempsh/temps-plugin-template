@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.temps-plugin/
+.publisher/
+.env
+.env.*
+*.enc
+*.pem
+*.key
+*.tsbuildinfo
