@@ -1,68 +1,58 @@
 # Temps TypeScript plugin template
 
-Use **Use this template**, not a fork, to start your own native Temps plugin.
-No Rust is required. Bun compiles TypeScript for six Linux/macOS targets;
-Temps servers download the native executable without installing Bun or npm.
+Use **Use this template** on GitHub to create your own native Temps plugin. No
+Rust or npm publication is required. Temps builds the plugin from your GitHub
+source and embeds its UI in the native executable. Installation does not require
+restarting Temps.
 
-## Develop
+## Customize and push
 
-Install Bun 1.4.2, then run:
+Install [Bun](https://bun.sh/) 1.4.2, then edit `package.json` (plugin name,
+version, title, author, repository, description and supported platforms),
+`src/index.ts` (manifest, navigation and routes), and `src/page.ts` (sidebar UI).
+The example serves its page at `/ui/` and preserves JSON at `/`.
 
 ```sh
 bun install --frozen-lockfile
 bun test
 bun run check
 bun run build
+git add package.json bun.lock src README.md
+git commit -m "feat: customize plugin"
+git push origin main
 ```
 
-Edit `src/index.ts` and customize `package.json`: npm scope/name, version,
-author, repository URL, plugin identity, title, category and description.
-The example implements the SDK protocol and returns JSON at its root route.
-Test real behavior on each advertised platform; cross-compilation alone is
-not proof of runtime compatibility.
+Commit `bun.lock` with the source; Temps uses the lockfile for a reproducible
+build. Test real behavior on each advertised platform; cross-compilation alone
+does not prove runtime compatibility. Review dependencies and build scripts
+before installing any plugin: building source executes code from that repository.
 
-## Tag-based publication (preview)
+## Install in Temps
 
-The workflow temporarily pins the publishing CLI source from Temps PR #978
-to an immutable commit; it does not assume npm's current CLI has plugin commands.
+In the Temps Plugins page, choose **Install from GitHub**, paste your repository
+URL, review the source/trust warning, and confirm installation. The installed
+plugin should appear in the platform sidebar; open it to see the embedded page.
+The Temps host needs Git and a working Docker daemon to build the executable.
+For a public repository, the URL is enough. Private repositories require GitHub
+credentials configured on the Temps host or in its Docker container; your local
+workstation's GitHub login is not automatically available to the server. Do not
+put credentials in the URL or commit them to this repository.
 
-1. Create a GitHub environment named `npm-publish`. Restrict who can push release
-   tags and require an environment reviewer before granting it credentials.
-2. Add `NPM_TOKEN`, a least-privilege npm automation credential authorized to
-   publish your scoped packages, and `TEMPS_CLOUD_TOKEN`, a Temps account API
-   credential for a verified-email publisher. Never use an instance API key or
-   a registry signing key. Configure credentials in GitHub, not in files.
-   Also add `RELEASE_STATE_KEY`: 32 random bytes encoded as 64 hexadecimal
-   characters, generated locally with `openssl rand -hex 32`. Keep this key
-   unchanged for retries. It encrypts recovery artifacts, not the catalogue.
-3. Match the package version to your tag:
+Where supported by your configured Temps CLI, you can also use:
 
 ```sh
-git tag v0.1.0
-git push origin v0.1.0
+bunx --bun @temps-sdk/cli plugin install https://github.com/owner/repo
+bunx --bun @temps-sdk/cli plugin update my-plugin
 ```
 
-Actions builds native packages, creates a draft, embeds its ownership challenges,
-publishes public npm packages, verifies them, and submits to Temps. Approval and
-protected signing/deployment are separate. Check https://temps.sh/dashboard/plugins
-for **Published** before expecting a listing at https://registry.temps.sh.
+The CLI commands are currently available in the Temps plugin-source preview
+and may not be in the npm-published CLI yet; use the Plugins page if unavailable.
+The interactive install asks you to review and trust the source. `--yes` skips
+that prompt only when you have already reviewed it. Installing a new source
+revision is an explicit update, not an automatic effect of pushing to GitHub;
+use the plugin's update action in Temps after pushing changes. UI installation
+refreshes navigation automatically. After a CLI installation, return to the
+console tab to refresh its plugin list; no Temps restart is needed.
 
-Never publish this unchanged template: release validation deliberately rejects it.
-Do not attach credentials to PR workflows. Plugin build code runs with the release
-job's privileges; review changes before granting access to publishing secrets.
-
-## Release limitations
-
-Use GitHub's **Re-run jobs** on the same run after a partial failure. The workflow
-restores its AES-GCM-encrypted recovery artifact and rebuilds missing binaries;
-the CLI verifies existing npm packages instead of overwriting them. Artifacts
-expire after seven days, and ownership challenges expire after 24 hours. If the
-runner is forcibly terminated before saving its journal, or the artifact/key is
-lost, use a new version. Do not delete/recreate tags to retry: that creates a new
-run without its recovery artifact. Never upload the plaintext `.temps-plugin`
-directory. A restored journal does not bypass the API's ownership checks.
-
-The registry still requires its protected signing runner to process queued
-submissions. This template neither contains nor provisions registry signing keys.
-
-Full author guide: https://temps.sh/docs/plugins/publishing
+The template's GitHub Actions workflow only tests commits and pull requests.
+It does not publish to npm or require `NPM_TOKEN` or a Temps cloud token.
