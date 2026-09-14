@@ -37,6 +37,7 @@ test("UI routes serve embedded HTML and JavaScript", () => {
   expect(script.status).toBe(200);
   expect(script.headers["Content-Type"]).toContain("javascript");
   expect(script.body).toContain("data-message");
+  expect(script.body).toContain("new URL('../', location.href).pathname.replace(/\\/$/, '')");
 });
 
 test("root JSON API remains available", () => {

@@ -18,7 +18,7 @@ export function manifest() {
 
 const assets: EmbeddedAssets = new Map([
   ["index.html", { content: Buffer.from(page(pkg.temps.title)), contentType: "text/html; charset=utf-8", immutable: false }],
-  ["app.js", { content: Buffer.from("fetch('../').then(r => { if (!r.ok) throw new Error('Unavailable'); return r.json(); }).then(data => { document.querySelector('[data-message]').textContent = data.message; }).catch(() => { document.querySelector('[data-message]').textContent = 'The JSON endpoint is unavailable.'; });"), contentType: "application/javascript; charset=utf-8", immutable: false }],
+  ["app.js", { content: Buffer.from("const apiPath = new URL('../', location.href).pathname.replace(/\\/$/, ''); fetch(apiPath).then(r => { if (!r.ok) throw new Error('Unavailable'); return r.json(); }).then(data => { document.querySelector('[data-message]').textContent = data.message; }).catch(() => { document.querySelector('[data-message]').textContent = 'The JSON endpoint is unavailable.'; });"), contentType: "application/javascript; charset=utf-8", immutable: false }],
 ]);
 
 export function handler(): RequestHandler {
