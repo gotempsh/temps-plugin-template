@@ -6,7 +6,7 @@ Temps servers download the native executable without installing Bun or npm.
 
 ## Develop
 
-Install Bun 1.3.3, then run:
+Install Bun 1.4.2, then run:
 
 ```sh
 bun install --frozen-lockfile
