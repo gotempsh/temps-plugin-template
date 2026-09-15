@@ -3,6 +3,10 @@
 import { expect, test } from "bun:test";
 import pkg from "../package.json";
 
+test("the published template credits its maintainer instead of placeholder metadata", () => {
+  expect(pkg.author).toBe("David Viejo");
+});
+
 test("registry screenshots reference real PNG assets with accessible descriptions", async () => {
   expect(pkg.temps.screenshots).toHaveLength(2);
   for (const screenshot of pkg.temps.screenshots) {

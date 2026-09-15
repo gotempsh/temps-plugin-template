@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "A hello-world native Temps plugin",
-  "author": "Your team",
+  "author": "David Viejo",
   "repository": "https://github.com/your-org/your-plugin",
   "scripts": {
     "test": "bun test",
