@@ -12,6 +12,13 @@ version, title, author, repository, description and supported platforms),
 `src/index.ts` (manifest, navigation and routes), and `src/page.ts` (sidebar UI).
 The example serves its page at `/ui/` and preserves JSON at `/`.
 
+The registry previews come from `temps.screenshots` in `package.json`. Replace
+the light/dark PNGs in `assets/` with screenshots of your own plugin, and update
+each repository-relative `path`, descriptive `alt`, and optional `caption`.
+Capture only the plugin UI: never include credentials, account details, or
+private project data. The catalog resolves these paths at the plugin's pinned
+Git commit; changes appear after merging and refreshing the GitHub catalog.
+
 ```sh
 bun install --frozen-lockfile
 bun test

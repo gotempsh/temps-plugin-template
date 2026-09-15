@@ -18,6 +18,18 @@
     "title": "My plugin",
     "category": "Development",
     "entrypoint": "src/index.ts",
+    "screenshots": [
+      {
+        "path": "assets/plugin-light.png",
+        "alt": "My plugin in light mode, showing its online status and hello-world API response",
+        "caption": "The starter plugin running inside Temps in light mode."
+      },
+      {
+        "path": "assets/plugin-dark.png",
+        "alt": "My plugin in dark mode, showing its online status and hello-world API response",
+        "caption": "The same plugin UI adapts to dark mode."
+      }
+    ],
     "platforms": ["linux-amd64-gnu", "linux-arm64-gnu", "linux-amd64-musl", "linux-arm64-musl", "darwin-amd64", "darwin-arm64"]
   }
 }
